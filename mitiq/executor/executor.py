@@ -306,7 +306,7 @@ class Executor:
 
         if self.can_batch:
             self._quantum_results.extend(result)
-            self._executed_circuits.extend(to_run)
+            # self._executed_circuits.extend(to_run)
         else:
             self._quantum_results.append(result)
             # self._executed_circuits.append(to_run)

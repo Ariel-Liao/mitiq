@@ -255,8 +255,8 @@ def basic_compile(program: Program) -> Program:
             elif inst.name == "CPHASE":
                 angle_param = inst.params[0]
                 new_prog += _CPHASE(angle_param, *inst.qubits)
-            elif inst.name == "CZ":
-                new_prog += CZ(*inst.qubits)  # remove dag modifiers
+            # elif inst.name == "CZ":
+            #     new_prog += CZ(*inst.qubits)  # remove dag modifiers
             elif inst.name == "H":
                 new_prog += _H(inst.qubits[0])
             elif inst.name == "I":
