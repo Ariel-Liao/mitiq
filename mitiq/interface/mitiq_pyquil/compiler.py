@@ -255,17 +255,17 @@ def basic_compile(program: Program) -> Program:
             elif inst.name == "CPHASE":
                 angle_param = inst.params[0]
                 new_prog += _CPHASE(angle_param, *inst.qubits)
-            # elif inst.name == "CZ":
-            #     new_prog += CZ(*inst.qubits)  # remove dag modifiers
+            elif inst.name == "CZ":
+                new_prog += CZ(*inst.qubits)  # remove dag modifiers
             elif inst.name == "H":
                 new_prog += _H(inst.qubits[0])
-            elif inst.name == "I":
-                new_prog += I(inst.qubits[0])  # remove dag modifiers
-            elif inst.name == "ISWAP":
-                new_prog += _ISWAP(*inst.qubits)  # remove dag modifiers
-            elif inst.name == "PHASE":
-                angle_param = inst.params[0]
-                new_prog += _PHASE(angle_param, inst.qubits[0])
+            # elif inst.name == "I":
+            #     new_prog += I(inst.qubits[0])  # remove dag modifiers
+            # elif inst.name == "ISWAP":
+            #     new_prog += _ISWAP(*inst.qubits)  # remove dag modifiers
+            # elif inst.name == "PHASE":
+            #     angle_param = inst.params[0]
+            #     new_prog += _PHASE(angle_param, inst.qubits[0])
             elif inst.name == "RX":
                 angle_param = inst.params[0]
                 if is_magic_angle(inst.params[0]):
