@@ -304,12 +304,12 @@ class Executor:
         result = self._executor(to_run, **kwargs)  # type: ignore
         self._calls_to_executor += 1
 
-        if self.can_batch:
-            self._quantum_results.extend(result)
-            self._executed_circuits.extend(to_run)
-        else:
-            self._quantum_results.append(result)
-            self._executed_circuits.append(to_run)
+        # if self.can_batch:
+        #     self._quantum_results.extend(result)
+        #     self._executed_circuits.extend(to_run)
+        # else:
+        #     self._quantum_results.append(result)
+        #     self._executed_circuits.append(to_run)
 
     @staticmethod
     def is_batched_executor(

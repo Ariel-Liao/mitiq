@@ -116,8 +116,8 @@ class Observable:
         n = len(qubit_indices)
 
         obs_matrix = np.zeros(shape=(2**n, 2**n), dtype=np.complex64)
-        # for pauli in self._paulis:
-        #     obs_matrix += pauli.matrix(qubit_indices_to_include=qubit_indices)
+        for pauli in self._paulis:
+            obs_matrix += pauli.matrix(qubit_indices_to_include=qubit_indices)
 
         return obs_matrix
 
