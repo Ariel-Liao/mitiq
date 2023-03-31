@@ -309,7 +309,7 @@ class Executor:
             self._executed_circuits.extend(to_run)
         else:
             self._quantum_results.append(result)
-            self._executed_circuits.append(to_run)
+            # self._executed_circuits.append(to_run)
 
     @staticmethod
     def is_batched_executor(
