@@ -259,23 +259,23 @@ def basic_compile(program: Program) -> Program:
                 new_prog += CZ(*inst.qubits)  # remove dag modifiers
             elif inst.name == "H":
                 new_prog += _H(inst.qubits[0])
-            # elif inst.name == "I":
-            #     new_prog += I(inst.qubits[0])  # remove dag modifiers
-            # elif inst.name == "ISWAP":
-            #     new_prog += _ISWAP(*inst.qubits)  # remove dag modifiers
-            # elif inst.name == "PHASE":
+            elif inst.name == "I":
+                new_prog += I(inst.qubits[0])  # remove dag modifiers
+            elif inst.name == "ISWAP":
+                new_prog += _ISWAP(*inst.qubits)  # remove dag modifiers
+            elif inst.name == "PHASE":
+                angle_param = inst.params[0]
+                new_prog += _PHASE(angle_param, inst.qubits[0])
+            # elif inst.name == "RX":
             #     angle_param = inst.params[0]
-            #     new_prog += _PHASE(angle_param, inst.qubits[0])
-            elif inst.name == "RX":
-                angle_param = inst.params[0]
-                if is_magic_angle(inst.params[0]):
-                    # in case dagger
-                    new_prog += RX(angle_param, inst.qubits[0])
-                else:
-                    new_prog += _RX(angle_param, inst.qubits[0])
-            elif inst.name == "RY":
-                angle_param = inst.params[0]
-                new_prog += _RY(angle_param, inst.qubits[0])
+            #     if is_magic_angle(inst.params[0]):
+            #         # in case dagger
+            #         new_prog += RX(angle_param, inst.qubits[0])
+            #     else:
+            #         new_prog += _RX(angle_param, inst.qubits[0])
+            # elif inst.name == "RY":
+            #     angle_param = inst.params[0]
+            #     new_prog += _RY(angle_param, inst.qubits[0])
             elif inst.name == "RZ":
                 # in case dagger
                 angle_param = inst.params[0]
