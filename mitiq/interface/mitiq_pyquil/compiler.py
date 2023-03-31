@@ -266,16 +266,16 @@ def basic_compile(program: Program) -> Program:
             elif inst.name == "PHASE":
                 angle_param = inst.params[0]
                 new_prog += _PHASE(angle_param, inst.qubits[0])
-            # elif inst.name == "RX":
-            #     angle_param = inst.params[0]
-            #     if is_magic_angle(inst.params[0]):
-            #         # in case dagger
-            #         new_prog += RX(angle_param, inst.qubits[0])
-            #     else:
-            #         new_prog += _RX(angle_param, inst.qubits[0])
-            # elif inst.name == "RY":
-            #     angle_param = inst.params[0]
-            #     new_prog += _RY(angle_param, inst.qubits[0])
+            elif inst.name == "RX":
+                angle_param = inst.params[0]
+                if is_magic_angle(inst.params[0]):
+                    # in case dagger
+                    new_prog += RX(angle_param, inst.qubits[0])
+                else:
+                    new_prog += _RX(angle_param, inst.qubits[0])
+            elif inst.name == "RY":
+                angle_param = inst.params[0]
+                new_prog += _RY(angle_param, inst.qubits[0])
             elif inst.name == "RZ":
                 # in case dagger
                 angle_param = inst.params[0]
