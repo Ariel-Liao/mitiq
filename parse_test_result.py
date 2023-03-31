@@ -67,5 +67,10 @@ for i, test in enumerate(sorted_tests, start=1):
             else:
                 func_def.decorator_list.append(generated_order_dec)
 
+            # add two empty lines after each function definition
+            func_def_str = ast.unparse(func_def)
+            tree_str = ast.unparse(tree)
+            tree_str = tree_str.replace(func_def_str, func_def_str + '\n\n')
+
             with open(file_path, 'w') as f:
                 f.write(ast.unparse(tree))

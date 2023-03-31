@@ -118,6 +118,6 @@ def test_rem_decorator_batched():
     noisy_executor = partial(noisy_readout_executor, p0=p0, p1=p1)
     base_values = [raw_execute(c, noisy_executor, observable) for c in circuits]
     rem_values = Executor(noisy_readout_batched).evaluate(circuits, observable)
-    for (true_val, base, rem_val) in zip(true_values, base_values, rem_values):
+    for true_val, base, rem_val in zip(true_values, base_values, rem_values):
         assert abs(true_val - rem_val) < abs(true_val - base)
         assert np.isclose(true_val, rem_val, atol=0.05)

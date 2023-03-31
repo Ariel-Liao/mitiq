@@ -77,7 +77,7 @@ def test_get_circuit_mask(circuit, test_mask):
 
 @pytest.mark.order(0)
 def test_get_slack_matrix_from_circuit_mask():
-    for (mask, expected) in zip(masks, slack_matrices):
+    for mask, expected in zip(masks, slack_matrices):
         slack_matrix = get_slack_matrix_from_circuit_mask(mask)
         assert np.allclose(slack_matrix, expected)
 

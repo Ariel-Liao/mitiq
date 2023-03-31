@@ -55,7 +55,7 @@ def test_random_cliffords():
         assert isinstance(circuit, cirq.Circuit)
         assert len(circuit.all_qubits()) == nqubits[x]
         two_q_gates = set()
-        for (a, b) in edges[x]:
+        for a, b in edges[x]:
             two_q_gates.add(cirq.CNOT(cirq.LineQubit(a), cirq.LineQubit(b)))
         assert two_q_gates.issubset(circuit.all_operations())
         assert set((op.gate for op in circuit.all_operations())).issubset(all_cliffords)
@@ -74,9 +74,9 @@ def test_random_single_cliffords():
 
 @pytest.mark.parametrize('depth_twoqprob_graph', [(16, 0.3, nx.complete_graph(3)), (20, 0.4, nx.complete_graph(4)), (24, 0.5, nx.complete_graph(5))])
 def test_generate_mirror_circuit(depth_twoqprob_graph):
-    (depth, xi, connectivity_graph) = depth_twoqprob_graph
+    depth, xi, connectivity_graph = depth_twoqprob_graph
     n = connectivity_graph.number_of_nodes()
-    (circ, _) = mirror_circuits.generate_mirror_circuit(depth, xi, connectivity_graph)
+    circ, _ = mirror_circuits.generate_mirror_circuit(depth, xi, connectivity_graph)
     assert isinstance(circ, cirq.Circuit)
     assert len(circ.all_qubits()) == n
     assert set((op.gate for op in circ.all_operations())).issubset(all_gates)
@@ -89,9 +89,9 @@ def test_mirror_circuit_seeding(seed):
     nlayers = 5
     two_qubit_gate_prob = 0.4
     connectivity_graph = nx.complete_graph(5)
-    (circuit, _) = mirror_circuits.generate_mirror_circuit(nlayers, two_qubit_gate_prob, connectivity_graph, seed=seed)
+    circuit, _ = mirror_circuits.generate_mirror_circuit(nlayers, two_qubit_gate_prob, connectivity_graph, seed=seed)
     for _ in range(5):
-        (circ, _) = mirror_circuits.generate_mirror_circuit(nlayers, two_qubit_gate_prob, connectivity_graph, seed=seed)
+        circ, _ = mirror_circuits.generate_mirror_circuit(nlayers, two_qubit_gate_prob, connectivity_graph, seed=seed)
         assert _equal(circuit, circ, require_qubit_equality=True, require_measurement_equality=True)
 
 @pytest.mark.parametrize('return_type', SUPPORTED_PROGRAM_TYPES.keys())
@@ -99,13 +99,13 @@ def test_mirror_circuits_conversions(return_type):
     nlayers = 5
     two_qubit_gate_prob = 0.4
     connectivity_graph = nx.complete_graph(5)
-    (circuit, _) = mirror_circuits.generate_mirror_circuit(nlayers, two_qubit_gate_prob, connectivity_graph, return_type=return_type)
+    circuit, _ = mirror_circuits.generate_mirror_circuit(nlayers, two_qubit_gate_prob, connectivity_graph, return_type=return_type)
     assert return_type in circuit.__module__
 
 @pytest.mark.parametrize('twoq_name_and_gate', [('CNOT', cirq.CNOT), ('CZ', cirq.CZ)])
 def test_two_qubit_gate(twoq_name_and_gate):
-    (twoq_name, twoq_gate) = twoq_name_and_gate
-    (circuit, _) = mirror_circuits.generate_mirror_circuit(nlayers=2, two_qubit_gate_prob=1.0, connectivity_graph=nx.complete_graph(5), two_qubit_gate_name=twoq_name)
+    twoq_name, twoq_gate = twoq_name_and_gate
+    circuit, _ = mirror_circuits.generate_mirror_circuit(nlayers=2, two_qubit_gate_prob=1.0, connectivity_graph=nx.complete_graph(5), two_qubit_gate_name=twoq_name)
     two_qubit_gates = {op.gate for op in circuit.all_operations() if len(op.qubits) == 2}
     assert two_qubit_gates == {twoq_gate}
 
@@ -118,6 +118,6 @@ def test_two_qubit_gate_unsupported():
 def test_deterministic_correct_bitstrings():
     """For a fixed seed, correct bitstrings should be deterministic."""
     expected_correct_bitstrings = [[0, 0], [1, 1], [0, 0], [0, 1], [0, 0], [0, 0], [0, 0], [0, 0]] + [[0, 0], [1, 1], [1, 1], [0, 1], [0, 1], [0, 1], [1, 0], [0, 1]] + [[1, 1], [1, 0], [1, 0], [1, 0], [0, 0], [1, 1], [0, 0], [0, 1]]
-    for (j, expected) in enumerate(expected_correct_bitstrings):
-        (_, bitstring) = mirror_circuits.generate_mirror_circuit(nlayers=1, two_qubit_gate_prob=1.0, connectivity_graph=nx.complete_graph(2), seed=j)
+    for j, expected in enumerate(expected_correct_bitstrings):
+        _, bitstring = mirror_circuits.generate_mirror_circuit(nlayers=1, two_qubit_gate_prob=1.0, connectivity_graph=nx.complete_graph(2), seed=j)
         assert bitstring == expected

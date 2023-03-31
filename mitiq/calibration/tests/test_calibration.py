@@ -24,7 +24,7 @@ def test_ZNE_workflow():
     cost = cal.get_cost()
     assert cost == {'noisy_executions': 24, 'ideal_executions': 0}
     cal.run()
-    (num_strategies, num_problems) = cal.results.mitigated.shape
+    num_strategies, num_problems = cal.results.mitigated.shape
     num_results = num_strategies * num_problems
     assert num_results == cost['noisy_executions']
     assert isinstance(cal.results, ExperimentResults)
@@ -88,7 +88,7 @@ def test_ExtrapolationResults_add_result():
 
 @pytest.mark.order(0)
 def test_ExtrapolationResults_errors():
-    (num_strategies, num_problems) = (5, 3)
+    num_strategies, num_problems = (5, 3)
     er = ExperimentResults(num_strategies, num_problems)
     er.mitigated = np.random.random((num_strategies, num_problems))
     er.ideal = np.random.random((num_strategies, num_problems))
@@ -96,7 +96,7 @@ def test_ExtrapolationResults_errors():
 
 @pytest.mark.order(0)
 def test_ExtrapolationResults_best_strategy():
-    (num_strategies, num_problems) = (5, 3)
+    num_strategies, num_problems = (5, 3)
     er = ExperimentResults(num_strategies, num_problems)
     er.mitigated = np.zeros((num_strategies, num_problems))
     er.mitigated[4, 2] = 0.8
@@ -112,7 +112,7 @@ def test_logging(capfd):
 
 @pytest.mark.order(0)
 def test_ExperimentResults_reset_data():
-    (num_strategies, num_problems) = (5, 3)
+    num_strategies, num_problems = (5, 3)
     er = ExperimentResults(num_strategies, num_problems)
     strat = Strategy(0, MitigationTechnique.ZNE, {})
     problem = BenchmarkProblem(0, 'circuit', 'ghz', {})

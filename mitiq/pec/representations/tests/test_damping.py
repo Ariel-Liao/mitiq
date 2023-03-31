@@ -23,7 +23,7 @@ def test_amplitude_damping_representation_with_choi(gate: Gate, noise: float, ci
     ideal_choi = _circuit_to_choi(Circuit(gate.on(q)))
     op_rep = _represent_operation_with_amplitude_damping_noise(ideal_circuit, noise)
     choi_components = []
-    for (coeff, noisy_op) in op_rep.basis_expansion:
+    for coeff, noisy_op in op_rep.basis_expansion:
         implementable_circ = noisy_op.circuit
         depolarizing_op = AmplitudeDampingChannel(noise).on(q)
         implementable_circ.append(depolarizing_op)

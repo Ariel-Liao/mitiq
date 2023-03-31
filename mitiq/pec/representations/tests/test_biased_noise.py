@@ -54,7 +54,7 @@ def test_two_qubit_representation_norm(gate: Gate, epsilon: float, eta: float):
 
 @pytest.mark.order(0)
 def test_three_qubit_biased_noise_representation_error():
-    (q0, q1, q2) = LineQubit.range(3)
+    q0, q1, q2 = LineQubit.range(3)
     with pytest.raises(ValueError):
         represent_operation_with_local_biased_noise(Circuit(CCNOT(q0, q1, q2)), 0.05, 10)
 
@@ -71,7 +71,7 @@ def test_biased_noise_representation_with_choi(gate: Gate, epsilon: float, eta: 
     b = epsilon * (3 * eta + 1) / (3 * (eta + 1))
     c = epsilon / (3 * (eta + 1))
     mix = [(a, unitary(I)), (b, unitary(Z)), (c, unitary(X)), (c, unitary(Y))]
-    for (coeff, noisy_op) in op_rep.basis_expansion:
+    for coeff, noisy_op in op_rep.basis_expansion:
         implementable_circ = noisy_op.circuit
         biased_op = ops.MixedUnitaryChannel(mix).on_each(*qreg)
         implementable_circ.append(biased_op)

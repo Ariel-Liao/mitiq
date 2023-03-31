@@ -110,7 +110,7 @@ def test_observable_measure_in_needs_two_circuits():
     measures_obs_circuits = sorted(obs.measure_in(circuit), key=len)
     assert len(measures_obs_circuits) == 2
     expected_circuits = [circuit + cirq.measure(q), circuit + xrotation.on(q) + cirq.measure(q)]
-    for (expected, measured) in zip(expected_circuits, measures_obs_circuits):
+    for expected, measured in zip(expected_circuits, measures_obs_circuits):
         assert _equal(measured, expected, require_qubit_equality=True, require_measurement_equality=True)
 
 @pytest.mark.order(0)
@@ -156,7 +156,7 @@ def test_observable_expectation_two_circuits(n, executor):
 @pytest.mark.parametrize('executor', (sample_bitstrings, compute_density_matrix))
 def test_observable_expectation_supported_qubits(executor):
     executor = functools.partial(executor, noise_level=(0,))
-    (a, b, c) = cirq.LineQubit.range(3)
+    a, b, c = cirq.LineQubit.range(3)
     circuit = cirq.Circuit(cirq.I(a), cirq.X.on(b), cirq.H.on(c))
     obs = Observable(PauliString(spec='Z', support=(0,)))
     assert np.isclose(obs.expectation(circuit, executor), 1.0)

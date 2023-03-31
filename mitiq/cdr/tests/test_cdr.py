@@ -53,7 +53,7 @@ def test_decorator_execute_with_cdr(circuit_type, fit_function, kwargs, random_s
         assert abs(cdr_value - true_value) <= abs(noisy_value - true_value)
 
     def decorated_execute_using_clifford_circuit():
-        (a, b) = cirq.LineQubit.range(2)
+        a, b = cirq.LineQubit.range(2)
         clifCirc = cirq.Circuit(cirq.H.on(a), cirq.H.on(b))
         cdr_mitigaged = decorated_execute(clifCirc)
         assert obs.expectation(clifCirc, simulate) == cdr_mitigaged
@@ -112,7 +112,7 @@ def test_no_num_fit_parameters_mitigate_executor_raises_error():
 
 @pytest.mark.order(0)
 def test_execute_with_cdr_using_clifford_circuit():
-    (a, b) = cirq.LineQubit.range(2)
+    a, b = cirq.LineQubit.range(2)
     clifCirc = cirq.Circuit(cirq.H.on(a), cirq.H.on(b))
     obs = Observable(PauliString('XZ'), PauliString('YY'))
     cdr_value = execute_with_cdr(clifCirc, observable=obs, executor=execute, simulator=simulate)
@@ -120,7 +120,7 @@ def test_execute_with_cdr_using_clifford_circuit():
 
 @pytest.mark.order(0)
 def test_mitigate_executor_with_cdr_using_clifford_circuit():
-    (a, b) = cirq.LineQubit.range(2)
+    a, b = cirq.LineQubit.range(2)
     clifCirc = cirq.Circuit(cirq.H.on(a), cirq.H.on(b))
     obs = Observable(PauliString('XZ'), PauliString('YY'))
     mitigated_executor = mitigate_executor(observable=obs, executor=execute, simulator=simulate)

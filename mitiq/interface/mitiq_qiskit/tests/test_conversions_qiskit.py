@@ -104,7 +104,7 @@ def test_map_bit_index(reg_sizes):
     expected_register_index = 0
     expected_mapped_index = 0
     for bit_index in range(sum(reg_sizes)):
-        (register_index, mapped_index) = _map_bit_index(bit_index, reg_sizes)
+        register_index, mapped_index = _map_bit_index(bit_index, reg_sizes)
         assert register_index == expected_register_index
         assert mapped_index == expected_mapped_index
         expected_mapped_index += 1
@@ -200,7 +200,7 @@ def test_transform_registers_wrong_reg_number():
 
 @pytest.mark.parametrize('size', [5])
 def test_measurement_order(size):
-    (q, c) = (qiskit.QuantumRegister(size), qiskit.ClassicalRegister(size))
+    q, c = (qiskit.QuantumRegister(size), qiskit.ClassicalRegister(size))
     circuit = qiskit.QuantumCircuit(q, c)
     index_order = [int(i) for i in np.random.RandomState(1).permutation(size)]
     for i in index_order:
@@ -216,7 +216,7 @@ def test_add_identity_to_idle():
     expected_idle_qubits = circuit.qubits[1:-1]
     idle_qubits = _add_identity_to_idle(circuit)
     id_qubits = []
-    for (gates, qubits, cargs) in circuit.get_instructions('id'):
+    for gates, qubits, cargs in circuit.get_instructions('id'):
         for qubit in qubits:
             id_qubits.append(qubit)
     assert idle_qubits == set(expected_idle_qubits)
@@ -230,7 +230,7 @@ def test_remove_identity_from_idle():
     circuit.cx(0, 8)
     _remove_identity_from_idle(circuit, idle_indices)
     id_indices = []
-    for (gates, qubits, cargs) in circuit.get_instructions('id'):
+    for gates, qubits, cargs in circuit.get_instructions('id'):
         for qubit in qubits:
             id_indices.append(qubit.index)
     assert id_indices == []
@@ -238,7 +238,7 @@ def test_remove_identity_from_idle():
 @pytest.mark.order(0)
 def test_add_identity_to_idle_with_multiple_registers():
     """Tests idle qubits are correctly detected even with many registers."""
-    (circuit_multi_reg, circuit_single_reg) = _multi_reg_circuits()
+    circuit_multi_reg, circuit_single_reg = _multi_reg_circuits()
     _add_identity_to_idle(circuit_multi_reg)
     _add_identity_to_idle(circuit_single_reg)
     assert _equal(convert_to_mitiq(circuit_multi_reg)[0], convert_to_mitiq(circuit_single_reg)[0], require_qubit_equality=False)
@@ -246,11 +246,11 @@ def test_add_identity_to_idle_with_multiple_registers():
 @pytest.mark.order(0)
 def test_remove_identity_from_idle_with_multiple_registers():
     """Tests identities are correctly removed even with many registers."""
-    (circuit_multi_reg, circuit_single_reg) = _multi_reg_circuits()
+    circuit_multi_reg, circuit_single_reg = _multi_reg_circuits()
     idle_qubits_multi = _add_identity_to_idle(circuit_multi_reg.copy())
     idle_qubits_single = _add_identity_to_idle(circuit_single_reg.copy())
     _remove_identity_from_idle(circuit_multi_reg, idle_qubits_multi)
     _remove_identity_from_idle(circuit_single_reg, idle_qubits_single)
-    (input_multi, input_single) = _multi_reg_circuits()
+    input_multi, input_single = _multi_reg_circuits()
     assert circuit_multi_reg == input_multi
     assert circuit_single_reg == input_single

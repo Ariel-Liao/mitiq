@@ -19,7 +19,7 @@ def test_from_braket_non_parameterized_single_qubit_gates():
     for instr in instructions:
         braket_circuit.add_instruction(instr)
     cirq_circuit = from_braket(braket_circuit)
-    for (i, op) in enumerate(cirq_circuit.all_operations()):
+    for i, op in enumerate(cirq_circuit.all_operations()):
         assert np.allclose(instructions[i].operator.to_matrix(), protocols.unitary(op))
     qreg = LineQubit.range(4)
     expected_cirq_circuit = Circuit(ops.I(qreg[0]), ops.X(qreg[1]), ops.Y(qreg[2]), ops.Z(qreg[3]), ops.H(qreg[0]), ops.S(qreg[1]), ops.S(qreg[2]) ** (-1), ops.T(qreg[3]), ops.T(qreg[0]) ** (-1), ops.X(qreg[1]) ** 0.5, ops.X(qreg[2]) ** (-0.5))
@@ -30,11 +30,11 @@ def test_from_braket_parameterized_single_qubit_gates(qubit_index):
     braket_circuit = BKCircuit()
     pgates = [braket_gates.Rx, braket_gates.Ry, braket_gates.Rz, braket_gates.PhaseShift, braket_gates.GPi, braket_gates.GPi2]
     angles = np.random.RandomState(11).random(len(pgates))
-    instructions = [Instruction(rot(a), target=qubit_index) for (rot, a) in zip(pgates, angles)]
+    instructions = [Instruction(rot(a), target=qubit_index) for rot, a in zip(pgates, angles)]
     for instr in instructions:
         braket_circuit.add_instruction(instr)
     cirq_circuit = from_braket(braket_circuit)
-    for (i, op) in enumerate(cirq_circuit.all_operations()):
+    for i, op in enumerate(cirq_circuit.all_operations()):
         assert np.allclose(instructions[i].operator.to_matrix(), protocols.unitary(op))
     qubit = LineQubit(qubit_index)
     expected_cirq_circuit = Circuit(ops.rx(angles[0]).on(qubit), ops.ry(angles[1]).on(qubit), ops.rz(angles[2]).on(qubit), ops.Z.on(qubit) ** (angles[3] / np.pi), cirq_ionq_ops.GPIGate(phi=angles[4] / (2 * np.pi)).on(qubit), cirq_ionq_ops.GPI2Gate(phi=angles[5] / (2 * np.pi)).on(qubit))
@@ -55,26 +55,26 @@ def test_from_braket_non_parameterized_two_qubit_gates():
 def test_from_braket_parameterized_two_qubit_gates():
     pgates = [braket_gates.CPhaseShift, braket_gates.CPhaseShift00, braket_gates.CPhaseShift01, braket_gates.CPhaseShift10, braket_gates.PSwap, braket_gates.XX, braket_gates.YY, braket_gates.ZZ, braket_gates.XY]
     angles = np.random.RandomState(2).random(len(pgates))
-    instructions = [Instruction(rot(a), target=[0, 1]) for (rot, a) in zip(pgates, angles)]
+    instructions = [Instruction(rot(a), target=[0, 1]) for rot, a in zip(pgates, angles)]
     cirq_circuits = list()
     for instr in instructions:
         braket_circuit = BKCircuit()
         braket_circuit.add_instruction(instr)
         cirq_circuits.append(from_braket(braket_circuit))
-    for (instr, cirq_circuit) in zip(instructions, cirq_circuits):
+    for instr, cirq_circuit in zip(instructions, cirq_circuits):
         assert np.allclose(instr.operator.to_matrix(), cirq_circuit.unitary())
 
 @pytest.mark.order(0)
 def test_from_braket_parameterized_two_qubit_two_parameters_gates():
     pgates = [braket_gates.MS]
     angles = np.random.RandomState(2).random((len(pgates), 2))
-    instructions = [Instruction(rot(a[0], a[1]), target=[0, 1]) for (rot, a) in zip(pgates, angles)]
+    instructions = [Instruction(rot(a[0], a[1]), target=[0, 1]) for rot, a in zip(pgates, angles)]
     cirq_circuits = list()
     for instr in instructions:
         braket_circuit = BKCircuit()
         braket_circuit.add_instruction(instr)
         cirq_circuits.append(from_braket(braket_circuit))
-    for (instr, cirq_circuit) in zip(instructions, cirq_circuits):
+    for instr, cirq_circuit in zip(instructions, cirq_circuits):
         assert np.allclose(instr.operator.to_matrix(), cirq_circuit.unitary())
 
 @pytest.mark.order(0)
@@ -119,7 +119,7 @@ def test_to_from_braket_common_one_qubit_gates():
     rots = [ops.rx, ops.ry, ops.rz]
     angles = [1 / 5, 3 / 5, -4 / 5]
     qubit = LineQubit(0)
-    cirq_circuit = Circuit(ops.X(qubit), ops.Y(qubit), ops.Z(qubit), [rot(angle).on(qubit) for (rot, angle) in zip(rots, angles)], ops.T(qubit), ops.T(qubit) ** (-1), ops.S(qubit), ops.S(qubit) ** (-1), ops.X(qubit) ** 0.5, ops.X(qubit) ** (-0.5))
+    cirq_circuit = Circuit(ops.X(qubit), ops.Y(qubit), ops.Z(qubit), [rot(angle).on(qubit) for rot, angle in zip(rots, angles)], ops.T(qubit), ops.T(qubit) ** (-1), ops.S(qubit), ops.S(qubit) ** (-1), ops.X(qubit) ** 0.5, ops.X(qubit) ** (-0.5))
     test_circuit = from_braket(to_braket(cirq_circuit))
     assert _equal(test_circuit, cirq_circuit, require_qubit_equality=True)
 

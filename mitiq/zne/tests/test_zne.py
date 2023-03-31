@@ -209,7 +209,7 @@ def test_qiskit_measurement_order_is_preserved_single_register(order):
     """Tests measurement order is preserved when folding, i.e., the dictionary
     of counts is the same as the original circuit on a noiseless simulator.
     """
-    (qreg, creg) = (qiskit.QuantumRegister(len(order)), qiskit.ClassicalRegister(len(order)))
+    qreg, creg = (qiskit.QuantumRegister(len(order)), qiskit.ClassicalRegister(len(order)))
     circuit = qiskit.QuantumCircuit(qreg, creg)
     circuit.x(qreg[0])
     for i in order:
@@ -224,7 +224,7 @@ def test_qiskit_measurement_order_is_preserved_two_registers():
     """
     n = 4
     qreg = qiskit.QuantumRegister(n)
-    (creg1, creg2) = (qiskit.ClassicalRegister(n // 2), qiskit.ClassicalRegister(n // 2))
+    creg1, creg2 = (qiskit.ClassicalRegister(n // 2), qiskit.ClassicalRegister(n // 2))
     circuit = qiskit.QuantumCircuit(qreg, creg1, creg2)
     circuit.x(qreg[0])
     circuit.x(qreg[2])

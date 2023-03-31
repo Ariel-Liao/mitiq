@@ -75,7 +75,7 @@ def test_mitigate_measurements():
 def test_closest_positive_distribution():
     inputs = [[0.3, 0.7], [-0.1, 1.1], [10, 10], [-1, 1, -1, 1], [-1, 0.1, -1, 0.2]]
     expected = [[0.3, 0.7], [0, 1], [0.5, 0.5], [0, 0.5, 0, 0.5], [0, 0.450317, 0, 0.549683]]
-    for (quasi_prob, prob) in zip(inputs, expected):
+    for quasi_prob, prob in zip(inputs, expected):
         assert np.allclose(closest_positive_distribution(quasi_prob), prob, atol=1e-05)
 
 @pytest.mark.order(0)

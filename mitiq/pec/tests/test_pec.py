@@ -35,7 +35,7 @@ def serial_executor(circuit: QPROGRAM, noise: float=BASE_NOISE) -> float:
     depolarizing noise and returns the expectation value of the ground state
     projector. Simulation will be slow for "large circuits" (> a few qubits).
     """
-    (circuit, _) = convert_to_mitiq(circuit)
+    circuit, _ = convert_to_mitiq(circuit)
     return compute_density_matrix(circuit, noise_model=cirq.depolarize, noise_level=(noise,))[0, 0].real
 
 def batched_executor(circuits) -> List[float]:
@@ -47,7 +47,7 @@ def noiseless_serial_executor(circuit: QPROGRAM) -> float:
 def fake_executor(circuit: cirq.Circuit, random_state: np.random.RandomState):
     """A fake executor which just samples from a normal distribution."""
     return random_state.randn()
-(q0, q1) = cirq.LineQubit.range(2)
+q0, q1 = cirq.LineQubit.range(2)
 oneq_circ = cirq.Circuit(cirq.Z.on(q0), cirq.Z.on(q0))
 twoq_circ = cirq.Circuit(cirq.Y.on(q1), cirq.CNOT.on(q0, q1), cirq.Y.on(q1))
 
@@ -126,7 +126,7 @@ def test_execute_with_pec_mitigates_noise(circuit, executor, circuit_type):
     unmitigated = serial_executor(circuit)
     if circuit_type in ['qiskit', 'pennylane']:
         reps = get_pauli_and_cnot_representations(base_noise=BASE_NOISE, qubits=[cirq.NamedQubit(name) for name in ('q_0', 'q_1')])
-        (circuit, _) = convert_to_mitiq(circuit)
+        circuit, _ = convert_to_mitiq(circuit)
     else:
         reps = pauli_representations
     mitigated = execute_with_pec(circuit, executor, representations=reps, num_samples=100, force_run_all=False, random_state=101)
@@ -171,17 +171,17 @@ def test_execute_with_pec_error_scaling(num_samples: int):
     """Tests that the error associated to the PEC value scales as
     1/sqrt(num_samples).
     """
-    (_, pec_data) = execute_with_pec(oneq_circ, partial(fake_executor, random_state=np.random.RandomState(0)), representations=pauli_representations, num_samples=num_samples, force_run_all=True, full_output=True)
+    _, pec_data = execute_with_pec(oneq_circ, partial(fake_executor, random_state=np.random.RandomState(0)), representations=pauli_representations, num_samples=num_samples, force_run_all=True, full_output=True)
     normalized_error = pec_data['pec_error'] * np.sqrt(num_samples)
     assert np.isclose(normalized_error, 1.0, atol=0.1)
 
 @pytest.mark.parametrize('precision', [0.2, 0.1])
 def test_precision_option_in_execute_with_pec(precision: float):
     """Tests that the 'precision' argument is used to deduce num_samples."""
-    (_, pec_data) = execute_with_pec(oneq_circ, partial(fake_executor, random_state=np.random.RandomState(0)), representations=pauli_representations, precision=precision, force_run_all=True, full_output=True, random_state=1)
+    _, pec_data = execute_with_pec(oneq_circ, partial(fake_executor, random_state=np.random.RandomState(0)), representations=pauli_representations, precision=precision, force_run_all=True, full_output=True, random_state=1)
     assert np.isclose(pec_data['pec_error'] / precision, 1.0, atol=0.15)
     num_samples = 1
-    (_, pec_data) = execute_with_pec(oneq_circ, partial(fake_executor, random_state=np.random.RandomState(0)), representations=pauli_representations, precision=precision, num_samples=num_samples, full_output=True)
+    _, pec_data = execute_with_pec(oneq_circ, partial(fake_executor, random_state=np.random.RandomState(0)), representations=pauli_representations, precision=precision, num_samples=num_samples, full_output=True)
     assert pec_data['num_samples'] == num_samples
 
 @pytest.mark.parametrize('bad_value', (0, -1, 2))
@@ -205,7 +205,7 @@ def test_pec_data_with_full_output():
     expectation value.
     """
     precision = 0.5
-    (pec_value, pec_data) = execute_with_pec(twoq_circ, serial_executor, precision=precision, representations=pauli_representations, full_output=True, random_state=102)
+    pec_value, pec_data = execute_with_pec(twoq_circ, serial_executor, precision=precision, representations=pauli_representations, full_output=True, random_state=102)
     norm = 1.0
     for op in twoq_circ.all_operations():
         for rep in pauli_representations:
@@ -249,7 +249,7 @@ def test_mitigate_executor_qiskit():
     batched_unmitigated = batched_executor([circuit] * 3)
     batched_mitigated_executor = mitigate_executor(batched_executor, representations=[rep], num_samples=10, random_state=1)
     batched_mitigated = batched_mitigated_executor([circuit] * 3)
-    assert [np.isclose(batched_unmitigated_value, batched_mitigated_value) for (batched_unmitigated_value, batched_mitigated_value) in zip(batched_unmitigated, batched_mitigated)]
+    assert [np.isclose(batched_unmitigated_value, batched_mitigated_value) for batched_unmitigated_value, batched_mitigated_value in zip(batched_unmitigated, batched_mitigated)]
 
 @pytest.mark.order(0)
 def test_pec_decorator_qiskit():

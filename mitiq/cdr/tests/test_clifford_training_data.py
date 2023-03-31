@@ -13,14 +13,14 @@ from mitiq.cdr._testing import random_x_z_cnot_circuit
 def test_generate_training_circuits():
     circuit = random_x_z_cnot_circuit(cirq.LineQubit.range(3), n_moments=5, random_state=1)
     assert not is_clifford(circuit)
-    (clifford_circuit,) = generate_training_circuits(circuit, num_training_circuits=1, fraction_non_clifford=0.0)
+    clifford_circuit, = generate_training_circuits(circuit, num_training_circuits=1, fraction_non_clifford=0.0)
     assert is_clifford(clifford_circuit)
 
 @pytest.mark.parametrize('circuit_type', SUPPORTED_PROGRAM_TYPES.keys())
 def test_generate_training_circuits_any_qprogram(circuit_type):
     circuit = random_x_z_cnot_circuit(cirq.LineQubit.range(3), n_moments=5, random_state=1)
     circuit = convert_from_mitiq(circuit, circuit_type)
-    (clifford_circuit,) = generate_training_circuits(circuit, num_training_circuits=1, fraction_non_clifford=0.0)
+    clifford_circuit, = generate_training_circuits(circuit, num_training_circuits=1, fraction_non_clifford=0.0)
     assert is_clifford(clifford_circuit)
 
 @pytest.mark.parametrize('method', ('uniform', 'gaussian'))

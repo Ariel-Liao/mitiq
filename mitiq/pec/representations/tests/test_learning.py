@@ -154,7 +154,7 @@ def test_learn_biased_noise_parameters(epsilon, eta):
 @pytest.mark.order(0)
 def test_empty_learning_kwargs():
     learning_kwargs = {}
-    (pec_data, method, minimize_kwargs) = _parse_learning_kwargs(learning_kwargs=learning_kwargs)
+    pec_data, method, minimize_kwargs = _parse_learning_kwargs(learning_kwargs=learning_kwargs)
     assert pec_data is None
     assert method == 'Nelder-Mead'
     assert minimize_kwargs == {}

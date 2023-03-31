@@ -49,7 +49,7 @@ def test_two_qubit_representation_norm(gate: Gate, noise: float):
 
 @pytest.mark.order(0)
 def test_three_qubit_depolarizing_representation_error():
-    (q0, q1, q2) = LineQubit.range(3)
+    q0, q1, q2 = LineQubit.range(3)
     with pytest.raises(ValueError):
         represent_operation_with_global_depolarizing_noise(Circuit(CCNOT(q0, q1, q2)), 0.05)
 
@@ -61,7 +61,7 @@ def test_depolarizing_representation_with_choi(gate: Gate, noise: float):
     ideal_choi = _operation_to_choi(gate.on(*qreg))
     op_rep = represent_operation_with_global_depolarizing_noise(Circuit(gate.on(*qreg)), noise)
     choi_components = []
-    for (coeff, noisy_op) in op_rep.basis_expansion:
+    for coeff, noisy_op in op_rep.basis_expansion:
         implementable_circ = noisy_op.circuit
         depolarizing_op = DepolarizingChannel(noise, len(qreg))(*qreg)
         implementable_circ.append(depolarizing_op)
@@ -78,7 +78,7 @@ def test_local_depolarizing_representation_with_choi(gate: Gate, noise: float):
     ideal_choi = _operation_to_choi(gate.on(*qreg))
     op_rep = represent_operation_with_local_depolarizing_noise(Circuit(gate.on(*qreg)), noise)
     choi_components = []
-    for (coeff, noisy_op) in op_rep.basis_expansion:
+    for coeff, noisy_op in op_rep.basis_expansion:
         implementable_circ = noisy_op.circuit
         depolarizing_op = DepolarizingChannel(noise).on_each(*qreg)
         implementable_circ.append(depolarizing_op)
@@ -89,7 +89,7 @@ def test_local_depolarizing_representation_with_choi(gate: Gate, noise: float):
 
 @pytest.mark.order(0)
 def test_three_qubit_local_depolarizing_representation_error():
-    (q0, q1, q2) = LineQubit.range(3)
+    q0, q1, q2 = LineQubit.range(3)
     with pytest.raises(ValueError):
         represent_operation_with_local_depolarizing_noise(Circuit(CCNOT(q0, q1, q2)), 0.05)
 
@@ -127,7 +127,7 @@ def test_represent_operations_in_circuit_local(circuit_type: str):
 @pytest.mark.parametrize('circuit_type', ['cirq', 'qiskit', 'pyquil'])
 def test_represent_operations_in_circuit_with_measurements(circuit_type: str, rep_function):
     """Tests measurements in circuit are ignored (not represented)."""
-    (q0, q1) = LineQubit.range(2)
+    q0, q1 = LineQubit.range(2)
     circ_mitiq = Circuit(X(q1), MeasurementGate(num_qubits=1)(q0), X(q1), MeasurementGate(num_qubits=1)(q0))
     circ = convert_from_mitiq(circ_mitiq, circuit_type)
     reps = rep_function(ideal_circuit=circ, noise_level=0.1)

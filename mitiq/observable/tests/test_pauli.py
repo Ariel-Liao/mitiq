@@ -15,7 +15,7 @@ zmat = cirq.unitary(cirq.Z)
 @pytest.mark.order(0)
 def test_pauli_init():
     pauli = PauliString(spec='IZXYI', coeff=1.0)
-    (a, b, c) = cirq.LineQubit.range(1, 4)
+    a, b, c = cirq.LineQubit.range(1, 4)
     assert pauli._pauli == cirq.PauliString(1.0, cirq.Z(a), cirq.X(b), cirq.Y(c))
     assert str(pauli) == 'Z(q(1))*X(q(2))*Y(q(3))'
 

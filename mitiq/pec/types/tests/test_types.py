@@ -190,7 +190,7 @@ def get_test_representation():
 
 @pytest.mark.order(0)
 def test_representation_simple():
-    (ideal, noisy_xop, noisy_zop, decomp) = get_test_representation()
+    ideal, noisy_xop, noisy_zop, decomp = get_test_representation()
     assert _equal(decomp.ideal, ideal)
     assert decomp.coeffs == [0.5, -0.5]
     assert np.allclose(decomp.distribution, np.array([0.5, 0.5]))
@@ -209,9 +209,9 @@ def test_representation_bad_type():
 
 @pytest.mark.order(0)
 def test_representation_sample():
-    (_, noisy_xop, noisy_zop, decomp) = get_test_representation()
+    _, noisy_xop, noisy_zop, decomp = get_test_representation()
     for _ in range(10):
-        (noisy_op, sign, coeff) = decomp.sample()
+        noisy_op, sign, coeff = decomp.sample()
         assert sign in (-1, 1)
         assert coeff in (-0.5, 0.5)
         assert noisy_op in (noisy_xop, noisy_zop)
@@ -221,18 +221,18 @@ def test_representation_sample():
 
 @pytest.mark.order(0)
 def test_representation_sample_seed():
-    (_, noisy_xop, noisy_zop, decomp) = get_test_representation()
+    _, noisy_xop, noisy_zop, decomp = get_test_representation()
     seed1 = np.random.RandomState(seed=1)
     seed2 = np.random.RandomState(seed=1)
     for _ in range(10):
-        (_, sign1, coeff1) = decomp.sample(random_state=seed1)
-        (_, sign2, coeff2) = decomp.sample(random_state=seed2)
+        _, sign1, coeff1 = decomp.sample(random_state=seed1)
+        _, sign2, coeff2 = decomp.sample(random_state=seed2)
         assert sign1 == sign2
         assert np.isclose(coeff1, coeff2)
 
 @pytest.mark.order(0)
 def test_representation_sample_bad_seed_type():
-    (_, _, _, decomp) = get_test_representation()
+    _, _, _, decomp = get_test_representation()
     with pytest.raises(TypeError, match='should be of type'):
         decomp.sample(random_state=7)
 
@@ -244,7 +244,7 @@ def test_representation_sample_zero_coefficient():
     decomp = OperationRepresentation(ideal=ideal, noisy_operations=[noisy_xop, noisy_zop], coeffs=[0.5, 0.0])
     random_state = np.random.RandomState(seed=1)
     for _ in range(500):
-        (noisy_op, sign, coeff) = decomp.sample(random_state=random_state)
+        noisy_op, sign, coeff = decomp.sample(random_state=random_state)
         assert sign == 1
         assert coeff == 0.5
         assert np.allclose(cirq.unitary(noisy_op.circuit), cirq.unitary(cirq.X))

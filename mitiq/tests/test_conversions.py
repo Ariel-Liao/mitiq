@@ -33,7 +33,7 @@ def returns_several_circuits(circ: cirq.Circuit, *args, **kwargs):
 
 @pytest.mark.parametrize('circuit', (qiskit_circuit, pyquil_circuit, braket_circuit))
 def test_to_mitiq(circuit):
-    (converted_circuit, input_type) = convert_to_mitiq(circuit)
+    converted_circuit, input_type = convert_to_mitiq(circuit)
     assert _equal(converted_circuit, cirq_circuit)
     assert input_type in circuit.__module__
 
@@ -45,20 +45,20 @@ def test_to_mitiq_bad_types(item):
 @pytest.mark.parametrize('to_type', SUPPORTED_PROGRAM_TYPES.keys())
 def test_from_mitiq(to_type):
     converted_circuit = convert_from_mitiq(cirq_circuit, to_type)
-    (circuit, input_type) = convert_to_mitiq(converted_circuit)
+    circuit, input_type = convert_to_mitiq(converted_circuit)
     assert _equal(circuit, cirq_circuit)
     assert input_type == to_type
 
 @pytest.mark.parametrize('circuit_and_expected', [(cirq.Circuit(cirq.X.on(cirq.LineQubit(0))), np.array([0, 1])), (cirq_circuit, np.array([1, 0, 0, 1]) / np.sqrt(2))])
 @pytest.mark.parametrize('to_type', SUPPORTED_PROGRAM_TYPES.keys())
 def test_accept_any_qprogram_as_input(circuit_and_expected, to_type):
-    (circuit, expected) = circuit_and_expected
+    circuit, expected = circuit_and_expected
     wavefunction = get_wavefunction(convert_from_mitiq(circuit, to_type))
     assert np.allclose(wavefunction, expected)
 
 @pytest.mark.parametrize('circuit_and_type', ((qiskit_circuit, 'qiskit'), (pyquil_circuit, 'pyquil'), (braket_circuit, 'braket')))
 def test_converter(circuit_and_type):
-    (circuit, input_type) = circuit_and_type
+    circuit, input_type = circuit_and_type
     scaled = scaling_function(circuit)
     assert isinstance(scaled, circuit_types[input_type])
     cirq_scaled = scaling_function(circuit, return_mitiq=True)

@@ -91,7 +91,7 @@ def test_fold_all_skip_moments(skip):
     circuit = testing.random_circuit(qubits=3, n_moments=7, op_density=1, random_state=1, gate_domain={ops.H: 1, ops.X: 1, ops.CNOT: 2})
     folded = _fold_all(circuit, skip_moments=skip)
     correct = Circuit()
-    for (i, moment) in enumerate(circuit):
+    for i, moment in enumerate(circuit):
         times_to_add = 3 * (i not in skip) + (i in skip)
         for _ in range(times_to_add):
             correct += moment
@@ -501,7 +501,7 @@ def test_convert_to_from_mitiq_qiskit():
     qiskit_circuit = QuantumCircuit(qiskit_qreg)
     qiskit_circuit.h(qiskit_qreg[0])
     qiskit_circuit.cnot(*qiskit_qreg)
-    (mitiq_circuit, input_circuit_type) = convert_to_mitiq(qiskit_circuit)
+    mitiq_circuit, input_circuit_type = convert_to_mitiq(qiskit_circuit)
     assert isinstance(mitiq_circuit, Circuit)
     mitiq_qreg = LineQubit.range(2)
     correct_mitiq_circuit = Circuit(ops.H.on(mitiq_qreg[0]), ops.CNOT.on(*mitiq_qreg))
@@ -674,7 +674,7 @@ def test_fold_local_with_fidelities(fold_method, qiskit):
     folded = fold_method(circ, scale_factor=3.0, fidelities=fidelities)
     correct = Circuit([ops.H.on_each(*qreg)], [ops.CNOT.on(qreg[0], qreg[1])], [ops.T.on(qreg[2])], [ops.TOFFOLI.on(*qreg)] * 3)
     if qiskit:
-        (folded, _) = convert_to_mitiq(folded)
+        folded, _ = convert_to_mitiq(folded)
         assert equal_up_to_global_phase(folded.unitary(), correct.unitary())
     else:
         assert _equal(folded, correct)
@@ -694,7 +694,7 @@ def test_fold_local_with_single_qubit_gates_fidelity_one(fold_method, qiskit):
     if qiskit:
         assert folded.qregs == circ.qregs
         assert folded.cregs == circ.cregs
-        (folded, _) = convert_to_mitiq(folded)
+        folded, _ = convert_to_mitiq(folded)
         assert equal_up_to_global_phase(folded.unitary(), correct.unitary())
     else:
         assert _equal(folded, correct)
@@ -716,7 +716,7 @@ def test_all_gates_folded_at_max_scale_with_fidelities(fold_method, qiskit):
     if qiskit:
         assert folded.qregs == circ.qregs
         assert folded.cregs == circ.cregs
-        (folded, _) = convert_to_mitiq(folded)
+        folded, _ = convert_to_mitiq(folded)
         assert equal_up_to_global_phase(folded.unitary(), correct.unitary())
     else:
         assert _equal(folded, correct)
@@ -779,7 +779,7 @@ def test_fold_fidelity_large_scale_factor_only_twoq_gates(fold_method, scale):
 
 @pytest.mark.order(0)
 def test_folding_keeps_measurement_order_with_qiskit():
-    (qreg, creg) = (QuantumRegister(2), ClassicalRegister(2))
+    qreg, creg = (QuantumRegister(2), ClassicalRegister(2))
     circuit = QuantumCircuit(qreg, creg)
     circuit.h(qreg[0])
     circuit.measure(qreg, creg)
@@ -852,7 +852,7 @@ def test_create_fold_mask_approximates_well(method):
         weight_mask = [rnd_state.rand() for _ in range(100)]
         seed = rnd_state.randint(100)
         fold_mask = _create_fold_mask(weight_mask, scale_factor, folding_method=method, seed=seed)
-        out_weights = [w + 2 * n * w for (w, n) in zip(weight_mask, fold_mask)]
+        out_weights = [w + 2 * n * w for w, n in zip(weight_mask, fold_mask)]
         actual_scale = sum(out_weights) / sum(weight_mask)
         assert np.isclose(scale_factor / actual_scale, 1.0, atol=0.01)
 
