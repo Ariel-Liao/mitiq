@@ -195,23 +195,23 @@ class Executor:
                 cast(Sequence[float], all_results)
             ).tolist()
 
-        elif self._executor_return_type in DensityMatrixLike:
-            observable = cast(Observable, observable)
-            all_results = cast(List[npt.NDArray[np.complex64]], all_results)
-            results = [
-                observable._expectation_from_density_matrix(density_matrix)
-                for density_matrix in all_results
-            ]
+        # elif self._executor_return_type in DensityMatrixLike:
+        #     observable = cast(Observable, observable)
+        #     all_results = cast(List[npt.NDArray[np.complex64]], all_results)
+        #     results = [
+        #         observable._expectation_from_density_matrix(density_matrix)
+        #         for density_matrix in all_results
+        #     ]
 
-        elif self._executor_return_type in MeasurementResultLike:
-            observable = cast(Observable, observable)
-            all_results = cast(List[MeasurementResult], all_results)
-            results = [
-                observable._expectation_from_measurements(
-                    all_results[i : i + result_step]
-                )
-                for i in range(len(all_results) // result_step)
-            ]
+        # elif self._executor_return_type in MeasurementResultLike:
+        #     observable = cast(Observable, observable)
+        #     all_results = cast(List[MeasurementResult], all_results)
+        #     results = [
+        #         observable._expectation_from_measurements(
+        #             all_results[i : i + result_step]
+        #         )
+        #         for i in range(len(all_results) // result_step)
+        #     ]
 
         else:
             raise ValueError(
@@ -260,16 +260,16 @@ class Executor:
                 for circ in collection.keys()
             ]
 
-        # if not self.can_batch:
-        #     for circuit in to_run:
-        #         self._call_executor(circuit, **kwargs)
+        if not self.can_batch:
+            for circuit in to_run:
+                self._call_executor(circuit, **kwargs)
 
-        # else:
-        #     stop = len(to_run)
-        #     step = self._max_batch_size
-        #     for i in range(int(np.ceil(stop / step))):
-        #         batch = to_run[i * step : (i + 1) * step]
-        #         self._call_executor(batch, **kwargs)
+        else:
+            stop = len(to_run)
+            step = self._max_batch_size
+            for i in range(int(np.ceil(stop / step))):
+                batch = to_run[i * step : (i + 1) * step]
+                self._call_executor(batch, **kwargs)
 
         these_results = self._quantum_results[start_result_index:]
 
