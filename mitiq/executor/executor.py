@@ -260,16 +260,16 @@ class Executor:
                 for circ in collection.keys()
             ]
 
-        if not self.can_batch:
-            for circuit in to_run:
-                self._call_executor(circuit, **kwargs)
+        # if not self.can_batch:
+        #     for circuit in to_run:
+        #         self._call_executor(circuit, **kwargs)
 
-        else:
-            stop = len(to_run)
-            step = self._max_batch_size
-            for i in range(int(np.ceil(stop / step))):
-                batch = to_run[i * step : (i + 1) * step]
-                self._call_executor(batch, **kwargs)
+        # else:
+        #     stop = len(to_run)
+        #     step = self._max_batch_size
+        #     for i in range(int(np.ceil(stop / step))):
+        #         batch = to_run[i * step : (i + 1) * step]
+        #         self._call_executor(batch, **kwargs)
 
         these_results = self._quantum_results[start_result_index:]
 
@@ -304,12 +304,12 @@ class Executor:
         result = self._executor(to_run, **kwargs)  # type: ignore
         self._calls_to_executor += 1
 
-        # if self.can_batch:
-        #     self._quantum_results.extend(result)
-        #     self._executed_circuits.extend(to_run)
-        # else:
-        #     self._quantum_results.append(result)
-        #     self._executed_circuits.append(to_run)
+        if self.can_batch:
+            self._quantum_results.extend(result)
+            self._executed_circuits.extend(to_run)
+        else:
+            self._quantum_results.append(result)
+            self._executed_circuits.append(to_run)
 
     @staticmethod
     def is_batched_executor(
