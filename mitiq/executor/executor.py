@@ -195,23 +195,23 @@ class Executor:
                 cast(Sequence[float], all_results)
             ).tolist()
 
-        elif self._executor_return_type in DensityMatrixLike:
-            observable = cast(Observable, observable)
-            all_results = cast(List[npt.NDArray[np.complex64]], all_results)
-            results = [
-                observable._expectation_from_density_matrix(density_matrix)
-                for density_matrix in all_results
-            ]
+        # elif self._executor_return_type in DensityMatrixLike:
+        #     observable = cast(Observable, observable)
+        #     all_results = cast(List[npt.NDArray[np.complex64]], all_results)
+        #     results = [
+        #         observable._expectation_from_density_matrix(density_matrix)
+        #         for density_matrix in all_results
+        #     ]
 
-        elif self._executor_return_type in MeasurementResultLike:
-            observable = cast(Observable, observable)
-            all_results = cast(List[MeasurementResult], all_results)
-            results = [
-                observable._expectation_from_measurements(
-                    all_results[i : i + result_step]
-                )
-                for i in range(len(all_results) // result_step)
-            ]
+        # elif self._executor_return_type in MeasurementResultLike:
+        #     observable = cast(Observable, observable)
+        #     all_results = cast(List[MeasurementResult], all_results)
+        #     results = [
+        #         observable._expectation_from_measurements(
+        #             all_results[i : i + result_step]
+        #         )
+        #         for i in range(len(all_results) // result_step)
+        #     ]
 
         else:
             raise ValueError(
@@ -301,15 +301,15 @@ class Executor:
         Args:
             to_run: Circuit(s) to run.
         """
-        # result = self._executor(to_run, **kwargs)  # type: ignore
-        # self._calls_to_executor += 1
+        result = self._executor(to_run, **kwargs)  # type: ignore
+        self._calls_to_executor += 1
 
-        # if self.can_batch:
-        #     self._quantum_results.extend(result)
-        #     self._executed_circuits.extend(to_run)
-        # else:
-        #     self._quantum_results.append(result)
-        #     self._executed_circuits.append(to_run)
+        if self.can_batch:
+            self._quantum_results.extend(result)
+            self._executed_circuits.extend(to_run)
+        else:
+            self._quantum_results.append(result)
+            self._executed_circuits.append(to_run)
 
     @staticmethod
     def is_batched_executor(
